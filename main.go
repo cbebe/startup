@@ -33,6 +33,14 @@ func getLinks(b []byte) []Link {
 func startupServer(port int) {
 	r := http.NewServeMux()
 
+	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		b, err := os.ReadFile("favicon.ico")
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(b)
+	})
+
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		b, err := os.ReadFile("links.txt")
 		if err != nil {
