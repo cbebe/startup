@@ -24,4 +24,6 @@ links.txt:
 web: Caddyfile
 	sudo caddy start
 
-.PHONY: web run dev
+bg: web run
+
+.PHONY: web run dev bg
