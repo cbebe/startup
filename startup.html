@@ -14,15 +14,22 @@
 </head>
 
 <body>
-	<ul class="nav justify-content-center flex-column">
-		{{ range .Links }}
-		{{ block "link-list-elt" . }}
-		<li class="nav-item">
-			<a class="nav-link" href="{{ .Href }}">{{ .Title }}</a>
-		</li>
-		{{ end }}
-		{{ end }}
-	</ul>
+	<div class="container row">
+		<div class="col-4">
+			<ul class="nav justify-content-center flex-column">
+				{{ range .Links }}
+				{{ block "link-list-elt" . }}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ .Href }}">{{ .Title }}</a>
+				</li>
+				{{ end }}
+				{{ end }}
+			</ul>
+		</div>
+		<div class="col-8">
+			<img src="meme.jpg" alt="I HATE SPONSORED LINKS I HATE SPONSORED LINKS I HATE SPONSORED LINKS">
+		</div>
+	</div>
 </body>
 
 </html>

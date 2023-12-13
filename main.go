@@ -17,7 +17,7 @@ func main() {
 
 type Link struct {
 	Title string
-	Href  string
+	Href  template.URL
 }
 
 func getLinks(b []byte) []Link {
@@ -25,21 +25,27 @@ func getLinks(b []byte) []Link {
 	links := make([]Link, 0, len(l))
 	for _, link := range l {
 		t := strings.Split(link, "\t")
-		links = append(links, Link{Title: t[0], Href: t[1]})
+		// This is coming from us anyway, should be safe
+		url := template.URL(t[1])
+		links = append(links, Link{Title: t[0], Href: url})
 	}
 	return links
 }
 
-func startupServer(port int) {
-	r := http.NewServeMux()
-
-	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		b, err := os.ReadFile("favicon.ico")
+func sendFile(r *http.ServeMux, name string) {
+	r.HandleFunc("/"+name, func(w http.ResponseWriter, r *http.Request) {
+		b, err := os.ReadFile(name)
 		if err != nil {
 			log.Fatal(err)
 		}
 		w.Write(b)
 	})
+}
+
+func startupServer(port int) {
+	r := http.NewServeMux()
+	sendFile(r, "favicon.ico")
+	sendFile(r, "meme.jpg")
 
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		b, err := os.ReadFile("links.txt")
