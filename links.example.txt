@@ -1,2 +1,2 @@
-GitHub	https://github.com
-Discord	https://discord.com/app
+GitHub	https://github.com	Development
+Discord	https://discord.com/app	Communication
