@@ -2,9 +2,10 @@ package startup
 
 import (
 	"fmt"
-	yaml "gopkg.in/yaml.v3"
 	"os"
 	"strings"
+
+	yaml "gopkg.in/yaml.v3"
 )
 
 type Entry struct {

@@ -2,33 +2,39 @@ package startup
 
 import (
 	"fmt"
-	"io/fs"
 	"os"
-	"os/exec"
 	"path"
-	"slices"
+	"strings"
+
+	"github.com/bitfield/script"
 )
 
-func dailyNotesDir() (string, error) {
+func getDailyNotesPipe() *script.Pipe {
 	h := os.Getenv("HOME")
+	p := script.ListFiles(path.Join(h, "notes", "daily", "*-*-*.md"))
 	if h == "" {
-		return "", fmt.Errorf("HOME is not defined")
+		p.SetError(fmt.Errorf("HOME is not defined"))
 	}
-	return path.Join(h, "notes", "daily"), nil
+	return p
+}
+
+func getJournalPrompts() ([]string, error) {
+	s, err := script.File("journal.txt").Reject("#").String()
+	if err != nil {
+		return nil, err
+	}
+	return strings.Split(strings.TrimSpace(s), "\n"), nil
 }
 
 func getMostRecentEntry() (*Entry, error) {
-	s, err := getDailyNotes()
+	recent, err := getDailyNotesPipe().Last(1).String()
 	if err != nil {
-		return nil, fmt.Errorf("getDailyNotes: %v", err)
+		return nil, fmt.Errorf("getDailyNotesPipe: %v", err)
 	}
-	recent := slices.Max(s)
-	d, err := dailyNotesDir()
-	if err != nil {
-		return nil, fmt.Errorf("dailyNotesDir: %v", err)
+	if recent == "" {
+		return nil, fmt.Errorf("glob not found")
 	}
-	filePath := path.Join(d, recent)
-	e, err := entryFromFile(filePath)
+	e, err := entryFromFile(recent)
 	if err != nil {
 		return nil, fmt.Errorf("entryFromFile: %v", err)
 	}
@@ -36,35 +42,9 @@ func getMostRecentEntry() (*Entry, error) {
 }
 
 func getDailyNotes() ([]string, error) {
-	d, err := dailyNotesDir()
+	f, err := getDailyNotesPipe().String()
 	if err != nil {
-		return nil, fmt.Errorf("dailyNotesDir: %v", err)
+		return nil, fmt.Errorf("getDailyNotesPipe: %v", err)
 	}
-	// Only get daily notes
-	matches, err := fs.Glob(os.DirFS(d), "*-*-*.md")
-	if err != nil {
-		return nil, fmt.Errorf("fs.Glob: %v", err)
-	}
-	return matches, nil
-}
-
-func execCommand(command string) error {
-	cmd := exec.Command("zsh")
-	in, err := cmd.StdinPipe()
-	if err != nil {
-		return fmt.Errorf("stdinPipe: %v", err)
-	}
-	_, err = in.Write([]byte(command + "\n"))
-	if err != nil {
-		return fmt.Errorf("write to pipe: %v", err)
-	}
-	err = in.Close()
-	if err != nil {
-		return fmt.Errorf("error closing stdin: %v", err)
-	}
-	err = cmd.Run()
-	if err != nil {
-		return fmt.Errorf("error running command: %v", err)
-	}
-	return nil
+	return strings.Split(strings.TrimSpace(f), "\n"), nil
 }
