@@ -53,7 +53,7 @@ func (e *Entry) FrontMatter() (map[string]any, error) {
 	var v map[string]any
 	err := yaml.Unmarshal([]byte(strings.Join(fm, "\n")), &v)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("yaml.Unmarshal: %v", err)
 	}
 	return v, nil
 }
@@ -65,7 +65,7 @@ func (e *Entry) WriteToFile() error {
 func entryFromFile(p string) (*Entry, error) {
 	b, err := os.ReadFile(p)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("readFile: %v", err)
 	}
 	s := strings.Split(string(b), "\n")
 	var currentHeader string

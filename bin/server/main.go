@@ -17,5 +17,5 @@ func startServer() {
 }
 
 func main() {
-	startup.LinkMain()
+	startServer()
 }
