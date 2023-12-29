@@ -60,7 +60,7 @@ func (e *Entry) FrontMatter() (map[string]any, error) {
 }
 
 func (e *Entry) WriteToFile() error {
-	return os.WriteFile(e.path, []byte(e.String()), 0644)
+	return os.WriteFile(e.path, []byte(e.String()), 0o644)
 }
 
 func entryFromFile(p string) (*Entry, error) {
