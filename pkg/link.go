@@ -20,6 +20,9 @@ func groupLinks(l []string) map[string][]Link {
 	groups := make(map[string][]Link)
 	groups[""] = make([]Link, 0)
 	for _, link := range l {
+		if link == "" {
+			continue
+		}
 		t := strings.Split(link, "\t")
 		// This is coming from us anyway, should be safe
 		url := template.URL(t[1])
