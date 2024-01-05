@@ -36,4 +36,7 @@ test:
 
 bg: web run
 
-.PHONY: web run dev bg test
+clean:
+	rm -rf $(OUT_DIR)
+
+.PHONY: web run dev bg test clean
