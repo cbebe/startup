@@ -1,3 +1,3 @@
 # Startup
 
-![I HATE SPONSORED LINKS](./meme.jpg)
+![I HATE SPONSORED LINKS](./static/meme.jpg)
