@@ -7,11 +7,11 @@ OUT_DIR=out
 EXE=$(OUT_DIR)/server
 VENDORED=vendored/htmx.min.js vendored/bootstrap.min.css
 
-dev: links.txt $(VENDORED)
-	go run bin/server/main.go
-
 run: $(EXE) $(VENDORED)
 	./$<
+
+dev: links.txt $(VENDORED)
+	go run bin/server/main.go
 
 $(EXE): bin/server/main.go $(GO_SRC) | $(OUT_DIR)
 	go build -o $@ $<
