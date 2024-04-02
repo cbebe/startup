@@ -20,7 +20,7 @@ func groupLinks(l []string) map[string][]Link {
 	groups := make(map[string][]Link)
 	groups[""] = make([]Link, 0)
 	for _, link := range l {
-		if link == "" {
+		if link == "" || strings.HasPrefix(link, "#") {
 			continue
 		}
 		t := strings.Split(link, "\t")
